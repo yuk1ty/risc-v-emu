@@ -14,9 +14,15 @@ fn main() -> Result<()> {
     let mut binary = Vec::new();
     file.read_to_end(&mut binary)?;
 
-    let cpu = Cpu::new(binary);
+    let mut cpu = Cpu::new(binary);
 
-    println!("Hello, world!");
+    while cpu.pc < cpu.memory.len() as u64 {
+        let inst = cpu.fetch();
+        cpu.pc += 4;
+        cpu.execute(inst)
+    }
+
+    cpu.dump_registers();
 
     Ok(())
 }
